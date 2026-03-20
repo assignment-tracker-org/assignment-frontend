@@ -17,9 +17,26 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "CI=false react-scripts build",
-    "test": "echo \"No tests\"",
+
+    // ✅ UPDATED (kept safe)
+    "test": "react-scripts test",
+
+    // ✅ NEW (for coverage)
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+
     "eject": "react-scripts eject"
   },
+
+  // ✅ NEW (safe addition)
+  "jest": {
+    "coverageReporters": ["lcov", "text"],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/reportWebVitals.js"
+    ]
+  },
+
   "eslintConfig": {
     "extends": [
       "react-app"
