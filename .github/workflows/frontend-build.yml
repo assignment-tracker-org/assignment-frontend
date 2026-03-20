@@ -1,16 +1,15 @@
-name: Frontend Build Check
+name: Frontend Build and Sonar Analysis
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -21,5 +20,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: npm run build
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: SonarCloud Scan
+        run: |
+          npx sonar-scanner \
+            -Dsonar.projectKey=kamatchi-2005_assignment-frontend \
+            -Dsonar.organization=kamatchi-2005 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
