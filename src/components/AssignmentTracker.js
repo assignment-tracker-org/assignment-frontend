@@ -2,7 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const API_URL = "https://assignment-backend-ram9.onrender.com/api/assignments";
+const PRIMARY_API_URL = process.env.REACT_APP_PRIMARY_API_URL || "https://assignment-tracker-backend-e9bmgrh7cneeg9hb.southeastasia-01.azurewebsites.net/api/assignments";
+const FALLBACK_API_URL = process.env.REACT_APP_FALLBACK_API_URL || "https://assignment-backend-ram9.onrender.com/api/assignments";
+
+const makeRequest = async (method, url, data = null) => {
+  try {
+    const config = { method, url, data };
+    return await axios(config);
+  } catch (error) {
+    console.warn(`Primary API failed, trying fallback: ${error.message}`);
+    const fallbackUrl = url.replace(PRIMARY_API_URL, FALLBACK_API_URL);
+    return await axios({ method, url: fallbackUrl, data });
+  }
+};
 
 function AssignmentTracker() {
   const [assignments, setAssignments] = useState([]);
@@ -11,10 +23,10 @@ function AssignmentTracker() {
 
   const fetchAssignments = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await makeRequest('get', PRIMARY_API_URL);
       setAssignments(res.data);
     } catch (error) {
-      console.error("Error fetching data", error);
+      console.error("Error fetching data from both APIs", error);
     }
   };
 
@@ -29,7 +41,7 @@ function AssignmentTracker() {
     }
 
     try {
-      await axios.post(API_URL, {
+      await makeRequest('post', PRIMARY_API_URL, {
         studentName,
         projectName
       });
@@ -45,7 +57,7 @@ function AssignmentTracker() {
     const assignment = assignments.find(a => a.id === id);
 
     try {
-      await axios.put(`${API_URL}/${id}`, {
+      await makeRequest('put', `${PRIMARY_API_URL}/${id}`, {
         ...assignment,
         status: "Completed"
       });
@@ -57,7 +69,7 @@ function AssignmentTracker() {
 
   const deleteAssignment = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await makeRequest('delete', `${PRIMARY_API_URL}/${id}`);
       fetchAssignments();
     } catch (error) {
       console.error("Error deleting assignment", error);
