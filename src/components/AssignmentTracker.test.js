@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import AssignmentTracker from './AssignmentTracker';
 
+// 🔥 FIX: mock axios
+jest.mock('axios');
+
 describe('AssignmentTracker Component', () => {
 
   test('renders component without crashing', () => {
