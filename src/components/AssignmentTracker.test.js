@@ -1,12 +1,13 @@
-// 🔥 FORCE MOCK axios BEFORE anything else
-jest.mock('axios', () => ({
-  get: jest.fn(() => Promise.resolve({ data: [] })),
-  post: jest.fn(() => Promise.resolve({ data: {} })),
-  delete: jest.fn(() => Promise.resolve({}))
-}));
-
 import { render, screen } from '@testing-library/react';
 import AssignmentTracker from './AssignmentTracker';
+import axios from 'axios';
+
+// ✅ FIXED axios mock
+jest.mock('axios');
+
+beforeEach(() => {
+  axios.mockResolvedValue({ data: [] }); // prevent API crash
+});
 
 describe('AssignmentTracker Component', () => {
 
@@ -14,10 +15,12 @@ describe('AssignmentTracker Component', () => {
     render(<AssignmentTracker />);
   });
 
-  test('renders heading text', () => {
+  test('renders heading text correctly', () => {
     render(<AssignmentTracker />);
-    const text = screen.getByText(/assignment/i);
-    expect(text).toBeInTheDocument();
+    
+    // ✅ FIX: use exact heading
+    const heading = screen.getByText('Student Assignment Tracker');
+    expect(heading).toBeInTheDocument();
   });
 
   test('renders input fields', () => {
@@ -28,7 +31,7 @@ describe('AssignmentTracker Component', () => {
 
   test('renders button', () => {
     render(<AssignmentTracker />);
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: /add assignment/i });
     expect(button).toBeInTheDocument();
   });
 
