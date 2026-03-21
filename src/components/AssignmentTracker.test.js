@@ -1,8 +1,12 @@
+// 🔥 FORCE MOCK axios BEFORE anything else
+jest.mock('axios', () => ({
+  get: jest.fn(() => Promise.resolve({ data: [] })),
+  post: jest.fn(() => Promise.resolve({ data: {} })),
+  delete: jest.fn(() => Promise.resolve({}))
+}));
+
 import { render, screen } from '@testing-library/react';
 import AssignmentTracker from './AssignmentTracker';
-
-// 🔥 FIX: mock axios
-jest.mock('axios');
 
 describe('AssignmentTracker Component', () => {
 
