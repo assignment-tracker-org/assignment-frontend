@@ -17,11 +17,16 @@ jobs:
         with:
           node-version: 18
 
+      # 🔥 FIX HERE
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Run tests with coverage
         run: npm run test:coverage
+
+      # ✅ OPTIONAL but recommended (ensures build works)
+      - name: Build project
+        run: npm run build
 
       - name: SonarCloud Scan
         run: |
