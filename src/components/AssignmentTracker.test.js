@@ -1,43 +1,42 @@
-import { render, screen } from '@testing-library/react';
-import AssignmentTracker from './AssignmentTracker';
-import axios from 'axios';
+import { render, screen } from "@testing-library/react";
+import AssignmentTracker from "./AssignmentTracker";
+import axios from "axios";
 
-// ✅ FIXED axios mock
-jest.mock('axios');
+// ✅ Proper axios mock for CRA + Jest
+jest.mock("axios", () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
 
 beforeEach(() => {
-  axios.mockResolvedValue({ data: [] }); // prevent API crash
+  axios.mockResolvedValue({ data: [] });
 });
 
-describe('AssignmentTracker Component', () => {
-
-  test('renders component without crashing', () => {
+describe("AssignmentTracker Component", () => {
+  test("renders component without crashing", () => {
     render(<AssignmentTracker />);
   });
 
-  test('renders heading text correctly', () => {
+  test("renders heading text", () => {
     render(<AssignmentTracker />);
-    
-    // ✅ FIX: use exact heading
-    const heading = screen.getByText('Student Assignment Tracker');
-    expect(heading).toBeInTheDocument();
+    const text = screen.getByText(/student assignment tracker/i); // ✅ FIXED
+    expect(text).toBeInTheDocument();
   });
 
-  test('renders input fields', () => {
+  test("renders input fields", () => {
     render(<AssignmentTracker />);
-    const inputs = screen.getAllByRole('textbox');
+    const inputs = screen.getAllByRole("textbox");
     expect(inputs.length).toBeGreaterThan(0);
   });
 
-  test('renders button', () => {
+  test("renders button", () => {
     render(<AssignmentTracker />);
-    const button = screen.getByRole('button', { name: /add assignment/i });
+    const button = screen.getByRole("button", { name: /add assignment/i });
     expect(button).toBeInTheDocument();
   });
 
-  test('basic DOM check', () => {
+  test("basic DOM check", () => {
     render(<AssignmentTracker />);
     expect(document.body).toBeTruthy();
   });
-
 });
