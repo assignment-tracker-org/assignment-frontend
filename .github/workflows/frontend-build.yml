@@ -2,7 +2,7 @@ name: Frontend Build and Sonar Analysis
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -17,21 +17,24 @@ jobs:
         with:
           node-version: 18
 
-      # 🔥 FIX HERE
+      # ✅ Fix dependency conflict
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      # ✅ Run tests with coverage
       - name: Run tests with coverage
         run: npm run test:coverage
 
-      # ✅ OPTIONAL but recommended (ensures build works)
+      # ✅ Build project
       - name: Build project
         run: npm run build
 
+      # ✅ SonarCloud Scan (FIXED)
       - name: SonarCloud Scan
         run: |
           npx sonar-scanner \
             -Dsonar.projectKey=kamatchi-2005_assignment-frontend \
             -Dsonar.organization=kamatchi-2005 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
