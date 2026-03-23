@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -56,23 +55,9 @@ function AssignmentTracker() {
     }
   };
 
-  //  DELETE WITH PASSWORD
   const deleteAssignment = async (id) => {
-    const password = prompt("Enter password to delete:");
-
-    if (!password) {
-      alert("Password required!");
-      return;
-    }
-
-    if (password !== "2006") {
-      alert("Wrong password ");
-      return;
-    }
-
     try {
       await axios.delete(`${API_URL}/${id}`);
-      alert("Deleted successfully ");
       fetchAssignments();
     } catch (error) {
       console.error("Error deleting assignment", error);
