@@ -131,12 +131,20 @@ function AssignmentTracker() {
                 </button>
               </td>
               <td>
-              <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => deleteAssignment(a.id)}
-                >
-                  Delete
-                </button>
+            <button
+  className="btn btn-danger btn-sm"
+  onClick={() => {
+    const password = prompt("Enter password to delete:");
+
+    if (password === "2005") {
+      deleteAssignment(a.id);
+    } else if (password !== null) {
+      alert("Incorrect password!");
+    }
+  }}
+>
+  Delete
+</button>
                 
               </td>
             </tr>
